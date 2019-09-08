@@ -1,5 +1,9 @@
 from valid_symbols_dictionary import symbols_dict
 
+formula = "(s.(r>(!(p+q))))"
+
+formula_backup = formula
+
 def check_balanced_parantheses(formula):
 	bracket = ['(', ')', '{', '}', '[', ']']
 	for x in formula:
@@ -15,32 +19,45 @@ def check_balanced_parantheses(formula):
 
 	return not formula
 
-def check_formula_validity(subformula):
+def check_subformula_validity(subformula):
 	global formula
-	if not check_balanced_parantheses(formula):
+
+	if subformula[1:len(subformula)-1].find('(') == -1:
+		subformula_wo_parentheses = subformula[1:len(subformula)-1]
+		binary_ops = list(symbols_dict.keys())
+		binary_ops.remove('!')
+
+		if any(x in subformula for x in binary_ops):
+			if (len(subformula_wo_parentheses) == 3) and (not subformula_wo_parentheses[0] in symbols_dict.keys()) and (not subformula_wo_parentheses[2] in symbols_dict.keys()) and (subformula_wo_parentheses[1] in binary_ops):
+				formula = formula.replace(subformula, 'X')
+				return True
+			return False
+
+		elif '!' in subformula:
+			if (len(subformula_wo_parentheses) == 2) and (not subformula_wo_parentheses[1] in symbols_dict.keys()) and (subformula_wo_parentheses[0] == '!'):
+				formula = formula.replace(subformula, 'X')
+				return True
+			return False
+		
+		# print("Formula so far: ", formula)
 		return False
 
-	if subformula.find('(') == -1:
-		for x in subformula:
-			if x in symbols_dict.keys():
-				index_of_operator = subformula.find(x)
-				if x is '!':
-					# if index_of_operator+1 < len(subformula):
-						
-					return (index_of_operator+1 < len(subformula))
-				else:
-					return (((index_of_operator-1) >= 0) and ((index_of_operator+1)<len(formula)))
+
+def check_formula_validity():
+	global formula
+
+	if formula[0] != '(' or formula[-1] != ')':
+		return False
 
 	while '(' in formula:
-		innermost_open_bracket_index = len(formula) - formula[::-1].find('(') - 1 
-		# print("innermost_open_bracket_index: ", innermost_open_bracket_index)
+		innermost_open_bracket_index = len(formula) - formula[::-1].find('(') - 1
 		innermost_close_bracket_index = formula.find(')', innermost_open_bracket_index)
-		return check_formula_validity(formula[innermost_open_bracket_index+1:innermost_close_bracket_index])
+		if not check_subformula_validity(formula[innermost_open_bracket_index:innermost_close_bracket_index+1]):
+			return False
 
+	return True
 
-formula = "(r&(p+q))"
-print(check_formula_validity(formula))
-
+print(check_balanced_parantheses(formula) and check_formula_validity())
 
 
 
