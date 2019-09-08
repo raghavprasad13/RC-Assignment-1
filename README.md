@@ -2,8 +2,8 @@
 
 Use the following symbols for the operators:
 
-'.': AND
-'+': OR
-'!': NOT
-'>': IMPLICATION
-'<': BI-IMPLICATION
+* **.** corresponds to AND
+* **+** corresponds to OR
+* **!** corresponds to NOT
+* **>** corresponds to IMPLICATION
+* **<** corresponds to BI-IMPLICATION
