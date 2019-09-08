@@ -12,6 +12,6 @@ Use the following symbols for the operators:
 
 - [x] Check if formula entered is valid or not
 - [x] Check DNF formula satisfiability
-- [ ] Check CNF formula satisfiability
+- [x] Check CNF formula satisfiability
 - [ ] Convert any given formula to CNF
 - [ ] Convert any given formula to DNF
