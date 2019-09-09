@@ -92,6 +92,7 @@ def convert_formula_to_prefix(subformula, operator_type):
 
 print(check_balanced_parantheses(formula) and check_formula_validity())
 
+prefix_formula = [prefix_formula, ]
 print(prefix_formula)
 
 

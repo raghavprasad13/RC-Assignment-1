@@ -61,24 +61,24 @@ def binaryize(s): # ensures all connectives are binary (and / or)
     else:
         return([s[0]] + [binaryize(i) for i in s[1:]])
     
-def distributivity(s):
-    revision = distributivity1(s)
+def distributivity(s, tup):
+    revision = distributivity1(s, tup)
     if revision == s:
         return s
     else:
-        return distributivity(revision)
+        return distributivity(revision, tup)
     
-def distributivity1(s): # only works on binary connectives
+def distributivity1(s, tup): # only works on binary connectives
     if type(s) is str:
         return s
-    elif type(s) is list and s[0] == "or" and type(s[1]) is list and s[1][0] == "and":
+    elif type(s) is list and s[0] == tup[0] and type(s[1]) is list and s[1][0] == tup[1]:
         # distribute s[2] over s[1]
-        return(["and"] + [distributivity(["or", i, s[2]]) for i in s[1][1:]])
-    elif type(s) is list and s[0] == "or" and type(s[2]) is list and s[2][0] == "and":
+        return([tup[1]] + [distributivity([tup[0], i, s[2]], tup) for i in s[1][1:]])
+    elif type(s) is list and s[0] == tup[0] and type(s[2]) is list and s[2][0] == tup[1]:
         # distribute s[1] over s[2]
-        return(["and"] + [distributivity(["or", i, s[1]]) for i in s[2][1:]])
+        return([tup[1]] + [distributivity([tup[0], i, s[1]], tup) for i in s[2][1:]])
     else:
-        return ([s[0]] + [distributivity(i) for i in s[1:]])
+        return ([s[0]] + [distributivity(i, tup) for i in s[1:]])
 
 def andAssociativity(s):
     revision = andAssociativity1(s)
@@ -170,13 +170,13 @@ def unique(c, remains):
     return True
         
 
-def cnf(s):
+def cnf(s, tup):
     s = biconditionalElimination(s)
     s = implicationElimination(s)
     s = demorgan(s)
     s = doubleNegationElimination(s)
     s = binaryize(s)
-    s = distributivity(s)
+    s = distributivity(s, tup)
     s = andAssociativity(s)
     s = orAssociativity(s)
     s = removeDuplicateLiterals(s)
@@ -191,9 +191,19 @@ def cnf(s):
 
 # formula = ['or', 's', ['and', 'p', 'q']]
 
+to_dnf_or_cnf = input("Convert to (D)NF or (C)NF? ").upper()
+
+tup = ('or', 'and')
+
+if to_dnf_or_cnf == 'D':
+    tup = ('and', 'or')
+elif to_dnf_or_cnf != 'C':
+    print("Incorrect input. Please input either 'C' or 'D'")
+    exit()
+
 formula = [['or', 's', ['and', 'r', ['or', 'p', 'q']]], ]
 
-formula_in_cnf = [cnf(l) for l in formula]
+formula_in_cnf = [cnf(l, tup) for l in formula]
 
 print(formula_in_cnf[0])
 
