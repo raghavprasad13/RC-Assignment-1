@@ -1,5 +1,5 @@
-symbols_dict = {'.': 'AND',\
-				'+': 'OR',\
-				'!': 'NOT',\
-				'>': 'IMPLICATION',\
-				'<': 'BI_IMPLICATION'}
+symbols_dict = {'.': 'and',\
+				'+': 'or',\
+				'!': 'not',\
+				'>': 'if',\
+				'<': 'iff'}
