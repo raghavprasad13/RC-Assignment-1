@@ -1,16 +1,12 @@
 def is_satisfiable(cnf_formula):
 	clauses = cnf_formula
-	symbols = list(set([y for x in clauses for y in x]))
+	symbols = list(set([literal[-1] for clause in clauses for literal in clause]))
 	model = {}
 
 	return dpll(clauses, symbols, model)
 
 def dpll(clauses, symbols, model):
 	clauses = apply_model(clauses, model)
-	# print()
-	# print("clauses: ", clauses)
-	# print("symbols: ", symbols)
-	# print("model: ", model)
 
 	if len(clauses) == 0:
 		return True
@@ -68,7 +64,7 @@ def find_pure_symbols(symbols, clauses, model):
 	return pure_symbols
 
 def find_unit_clauses(clauses, model):
-	clauses = apply_model(clauses, model)
+	# clauses = apply_model(clauses, model)
 	unit_clauses = {clause[0][-1]:(True if len(clause[0]) == 1 else False) for clause in clauses if len(clause) == 1}
 
 	return unit_clauses
@@ -104,12 +100,6 @@ def apply_model(clauses, model):
 
 	return clauses
 
-clauses = [['p', '!r'], ['p', 'q', '!s']]
-model = {}
-symbols = ['p', 'q', 'r', 's']
+cnf_formula = [['p',], ['!p',]]
 
-print(dpll(clauses, symbols, model))
-
-# print(find_pure_symbols(symbols, clauses, model))
-
-# print(find_unit_clauses(clauses, model))
+print(is_satisfiable(cnf_formula))
